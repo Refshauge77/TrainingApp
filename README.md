@@ -67,7 +67,6 @@ Appen er én Node-proces med en SQLite-database (filen `data/kajakklub.db`), så
 | `CLUB_TIMEZONE` | Tidszone til datoer i notifikationer (standard `Europe/Copenhagen`). |
 | `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` | Nøgler til push-notifikationer. Valgfrit: uden dem genereres et sæt automatisk og gemmes i databasen. Lav dem med `npx web-push generate-vapid-keys`. |
 | `VAPID_SUBJECT` | Kontakt-adresse til push-tjenesterne, fx `mailto:formand@kajakklub.dk`. |
-| `INSECURE_COOKIES=1` | Kun til test uden HTTPS. |
 
 ## Teknik
 

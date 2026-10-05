@@ -36,7 +36,8 @@ export function setSessionCookie(res, { token, expires }) {
   res.cookie(COOKIE_NAME, token, {
     httpOnly: true,
     sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production' && process.env.INSECURE_COOKIES !== '1',
+    // Secure whenever the browser reached us over HTTPS (directly or via a proxy/tunnel).
+    secure: res.req.secure,
     expires,
     path: '/',
   });
