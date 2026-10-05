@@ -4,11 +4,16 @@ import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
-const run = (args) => spawn(process.execPath, args, { cwd: root, stdio: 'inherit' });
+const CLIENT_URL = 'http://localhost:5173';
+const run = (args) => spawn(process.execPath, args, {
+  cwd: root, stdio: 'inherit', env: { ...process.env, KAJAK_DEV_CLIENT_URL: CLIENT_URL },
+});
+
+console.log(`\n  Åbn appen på ${CLIENT_URL}\n`);
 
 const children = [
   run(['--disable-warning=ExperimentalWarning', '--watch', 'server/index.js']),
-  run(['node_modules/vite/bin/vite.js', 'client']),
+  run(['node_modules/vite/bin/vite.js', 'client', '--port', '5173', '--strictPort']),
 ];
 
 function stop() {

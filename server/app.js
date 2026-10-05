@@ -9,7 +9,7 @@ import { pushRouter } from './routes/push.js';
 import { threadsRouter } from './routes/threads.js';
 import { usersRouter } from './routes/users.js';
 
-export function createApp({ db, inviteCode = '', staticDir = null, sendPush }) {
+export function createApp({ db, inviteCode = '', staticDir = null, devClientUrl = null, sendPush }) {
   const app = express();
   const hub = createHub();
   const notifier = createNotifier({ db, send: sendPush });
@@ -28,12 +28,23 @@ export function createApp({ db, inviteCode = '', staticDir = null, sendPush }) {
   api.use((_req, _res, next) => next(new HttpError(404, 'Ikke fundet')));
   app.use('/api', api);
 
-  if (staticDir && existsSync(staticDir)) {
+  if (devClientUrl) {
+    // `npm run dev`: the app itself is served by Vite, so send the browser there.
+    app.get('/{*path}', (req, res) => res.redirect(new URL(req.originalUrl, devClientUrl).href));
+  } else if (staticDir && existsSync(staticDir)) {
     // The service worker must always be fresh, or app updates can get stuck.
     app.get('/sw.js', (_req, res) => res.set('Cache-Control', 'no-cache').sendFile(join(staticDir, 'sw.js')));
     app.use(express.static(staticDir, { index: false, maxAge: '1h' }));
     // Single page app: every other route is handled client-side.
     app.get('/{*path}', (_req, res) => res.sendFile(join(staticDir, 'index.html')));
+  } else if (staticDir) {
+    app.get('/{*path}', (_req, res) => res.status(503).type('html').send(
+      '<!doctype html><meta charset="utf-8"><title>Kajakklubben</title>'
+      + '<body style="font-family:system-ui;max-width:36em;margin:3em auto;padding:0 1em">'
+      + '<h1>Appen er ikke bygget endnu</h1>'
+      + '<p>Kør <code>npm run build</code> og genstart med <code>npm start</code>.</p>'
+      + '<p>Under udvikling: kør <code>npm run dev</code> og åbn <a href="http://localhost:5173">http://localhost:5173</a>.</p>',
+    ));
   }
 
   app.use((err, _req, res, _next) => {

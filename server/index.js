@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { createApp } from './app.js';
 import { openDb } from './db.js';
@@ -10,10 +11,17 @@ const app = createApp({
   db,
   inviteCode: process.env.CLUB_INVITE_CODE ?? '',
   staticDir: `${root}client/dist`,
+  devClientUrl: process.env.KAJAK_DEV_CLIENT_URL,
 });
 
 const server = app.listen(port, () => {
-  console.log(`Kajakklub-appen kører på http://localhost:${port}`);
+  if (process.env.KAJAK_DEV_CLIENT_URL) {
+    console.log(`API-serveren kører på port ${port}.`);
+  } else if (existsSync(`${root}client/dist`)) {
+    console.log(`\n  Kajakklub-appen kører – åbn http://localhost:${port}\n`);
+  } else {
+    console.warn('Appen er ikke bygget endnu – kør "npm run build" før "npm start".');
+  }
   if (!process.env.CLUB_INVITE_CODE) {
     console.warn('Advarsel: CLUB_INVITE_CODE er ikke sat – alle kan oprette en bruger.');
   }
