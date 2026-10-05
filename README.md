@@ -49,6 +49,8 @@ npm run dev      # server på :3000 og frontend med hot reload på http://localh
 
 Test: `npm test`
 
+> **Windows:** Hvis PowerShell siger, at `npm.ps1` "is not digitally signed", så skriv `npm.cmd` i stedet for `npm` (fx `npm.cmd run dev`), eller brug Kommandoprompt (`cmd`).
+
 ## Drift
 
 ```sh
