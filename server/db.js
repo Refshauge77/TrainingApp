@@ -67,6 +67,26 @@ CREATE TABLE IF NOT EXISTS messages (
 );
 CREATE INDEX IF NOT EXISTS messages_thread ON messages(thread_id, id);
 
+CREATE TABLE IF NOT EXISTS push_subscriptions (
+  endpoint   TEXT PRIMARY KEY,
+  user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  p256dh     TEXT NOT NULL,
+  auth       TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+);
+
+-- Missing row = defaults: chat 'mine', events on.
+CREATE TABLE IF NOT EXISTS notification_prefs (
+  user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  chat    TEXT NOT NULL DEFAULT 'mine' CHECK (chat IN ('all', 'mine', 'off')),
+  events  INTEGER NOT NULL DEFAULT 1
+);
+
+CREATE TABLE IF NOT EXISTS settings (
+  key   TEXT PRIMARY KEY,
+  value TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS thread_reads (
   thread_id       INTEGER NOT NULL REFERENCES threads(id) ON DELETE CASCADE,
   user_id         INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,

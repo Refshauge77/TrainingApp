@@ -23,6 +23,12 @@ En app til planlægning og kommunikation i kajakklubben – som erstatning for d
 - Hver aftale i kalenderen har automatisk sin egen tråd, så snakken om en træning holdes samlet.
 - Ulæste beskeder vises med tæller, og nye beskeder dukker op med det samme (live).
 
+**Push-notifikationer**
+- Besked på telefonen ved nye chat-beskeder, nye træninger/aftaler, og når en aftale man er tilmeldt bliver aflyst eller flyttet.
+- Hver bruger vælger selv under *Klubben → Notifikationer*: chat-beskeder fra alle tråde, kun tråde man deltager i (standard – tråde man har startet eller skrevet i, og tråde for aftaler man er tilmeldt), eller slet ikke.
+- Virker på Android og computer i Chrome, Edge og Firefox. På iPhone (iOS 16.4+) skal appen først lægges på hjemmeskærmen fra Safari.
+- Man får ikke besked om den tråd, man allerede sidder og kigger på.
+
 **Medlemmer og roller**
 - **Administrator**: alt, inkl. at tildele roller. Den første bruger, der oprettes, bliver administrator.
 - **Træner**: opretter og redigerer træninger og løb (og alle andre aftaler).
@@ -58,17 +64,20 @@ Appen er én Node-proces med en SQLite-database (filen `data/kajakklub.db`), så
 | `CLUB_INVITE_CODE` | Klubkoden nye medlemmer skal bruge for at oprette sig. Uden den kan alle oprette en bruger. |
 | `PORT` | Port (standard `3000`). |
 | `DATABASE_FILE` | Placering af databasen (standard `data/kajakklub.db`). Tag backup af denne fil. |
+| `CLUB_TIMEZONE` | Tidszone til datoer i notifikationer (standard `Europe/Copenhagen`). |
+| `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` | Nøgler til push-notifikationer. Valgfrit: uden dem genereres et sæt automatisk og gemmes i databasen. Lav dem med `npx web-push generate-vapid-keys`. |
+| `VAPID_SUBJECT` | Kontakt-adresse til push-tjenesterne, fx `mailto:formand@kajakklub.dk`. |
 | `INSECURE_COOKIES=1` | Kun til test uden HTTPS. |
 
 ## Teknik
 
-- `server/` – Express-API med indbygget SQLite (`node:sqlite`), cookie-baseret login (scrypt-hashede adgangskoder) og Server-Sent Events til live-opdateringer.
-- `client/` – React-app bygget med Vite, mobile-first, lys/mørk tilstand og PWA-manifest.
+- `server/` – Express-API med indbygget SQLite (`node:sqlite`), cookie-baseret login (scrypt-hashede adgangskoder), Server-Sent Events til live-opdateringer og Web Push (`server/notify.js`) til notifikationer.
+- `client/` – React-app bygget med Vite, mobile-first, lys/mørk tilstand, PWA-manifest og service worker (`client/public/sw.js`), der viser notifikationerne.
 - `server/test/` – API-tests (`node --test`).
 
 ## Idéer til næste skridt
 
-- Push-notifikationer ved nye beskeder og ændrede/aflyste træninger.
+- Mulighed for at slå lyden fra i enkelte tråde.
 - Kalender-abonnement (iCal), så træningerne kan ses i telefonens egen kalender.
 - Billeder i chatten.
 - Hold/grupper (fx ungdom, motion, elite) med egne træninger og tråde.

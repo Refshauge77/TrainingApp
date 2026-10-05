@@ -5,7 +5,7 @@ import { id, str } from '../validate.js';
 
 const PAGE_SIZE = 50;
 
-export function threadsRouter({ db, hub }) {
+export function threadsRouter({ db, hub, notifier }) {
   const r = Router();
   r.use(requireUser);
 
@@ -55,6 +55,10 @@ export function threadsRouter({ db, hub }) {
       if (body) insertMessage(tid, req.user.id, body, null);
       return tid;
     });
+    if (body) {
+      const first = db.prepare('SELECT MAX(id) AS id FROM messages WHERE thread_id = ?').get(threadId).id;
+      notifier.chatMessage(threadId, getMessage.get(first));
+    }
     hub.broadcast({ type: 'threads-changed', threadId });
     res.status(201).json({ id: threadId });
   });
@@ -101,6 +105,7 @@ export function threadsRouter({ db, hub }) {
     const messageId = insertMessage(thread.id, req.user.id, body, replyTo);
     const message = serializeMessage(getMessage.get(messageId));
     hub.broadcast({ type: 'message', threadId: thread.id, message });
+    notifier.chatMessage(thread.id, message);
     res.status(201).json(message);
   });
 

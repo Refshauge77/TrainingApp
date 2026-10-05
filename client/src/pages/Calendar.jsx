@@ -5,6 +5,7 @@ import { addDays, dayKey, fmtDay, fmtMonth, monthGrid, sameDay, startOfDay } fro
 import { useLive } from '../session.jsx';
 import EventCard from '../components/EventCard.jsx';
 import Header from '../components/Header.jsx';
+import PushBanner from '../components/PushBanner.jsx';
 import Icon from '../components/Icon.jsx';
 import { EVENT_TYPES } from '../components/eventTypes.js';
 
@@ -76,6 +77,8 @@ export default function Calendar() {
           </>
         )}
       />
+
+      <PushBanner />
 
       <div className="filters">
         {[['all', 'Alle'], ['mine', 'Mine tilmeldinger'], ...Object.entries(EVENT_TYPES).map(([k, t]) => [k, t.label])].map(([key, label]) => (

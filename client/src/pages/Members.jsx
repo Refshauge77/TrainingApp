@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { api } from '../api.js';
 import { ROLE_LABELS, useSession } from '../session.jsx';
 import Header from '../components/Header.jsx';
+import NotificationSettings from '../components/NotificationSettings.jsx';
+import { disablePush } from '../push.js';
 import { initials } from './EventDetail.jsx';
 
 export default function Members() {
@@ -39,6 +41,8 @@ export default function Members() {
   }
 
   async function logout() {
+    // This device should stop receiving this member's notifications.
+    await disablePush().catch(() => {});
     await api.post('/auth/logout');
     setUser(null);
   }
@@ -65,6 +69,8 @@ export default function Members() {
           <button className="btn primary">Gem</button>
         </form>
       </section>
+
+      <NotificationSettings />
 
       <section className="card">
         <h3>Medlemmer ({members.length})</h3>

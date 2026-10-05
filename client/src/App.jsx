@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import { NavLink, Navigate, Route, Routes } from 'react-router-dom';
+import { NavLink, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import { api } from './api.js';
+import { syncSubscription } from './push.js';
 import { SessionContext, createLiveBus } from './session.jsx';
 import Login from './pages/Login.jsx';
 import Calendar from './pages/Calendar.jsx';
@@ -15,10 +16,23 @@ export default function App() {
   const [user, setUser] = useState(undefined);
   const [unread, setUnread] = useState(0);
   const live = useMemo(createLiveBus, []);
+  const navigate = useNavigate();
 
   useEffect(() => {
     api.get('/me').then(setUser, () => setUser(null));
   }, []);
+
+  // Tapping a notification while the app is open: the service worker asks us to navigate.
+  useEffect(() => {
+    if (!('serviceWorker' in navigator)) return;
+    const onMessage = (e) => { if (e.data?.type === 'navigate') navigate(e.data.url); };
+    navigator.serviceWorker.addEventListener('message', onMessage);
+    return () => navigator.serviceWorker.removeEventListener('message', onMessage);
+  }, [navigate]);
+
+  useEffect(() => {
+    if (user) syncSubscription().catch(() => {});
+  }, [user?.id]);
 
   // One live connection per logged-in browser tab.
   useEffect(() => {

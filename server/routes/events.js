@@ -8,7 +8,7 @@ export const EVENT_TYPES = ['training', 'competition', 'social', 'other'];
 const PLANNER_ONLY_TYPES = ['training', 'competition'];
 const MAX_OCCURRENCES = 60;
 
-export function eventsRouter({ db, hub }) {
+export function eventsRouter({ db, hub, notifier }) {
   const r = Router();
   r.use(requireUser);
 
@@ -55,7 +55,9 @@ export function eventsRouter({ db, hub }) {
     ).lastInsertRowid)));
 
     hub.broadcast({ type: 'events-changed' });
-    res.status(201).json({ ids, event: eventDetail(db, ids[0], req.user.id) });
+    const event = eventDetail(db, ids[0], req.user.id);
+    notifier.eventsCreated(event, ids.length, req.user.id);
+    res.status(201).json({ ids, event });
   });
 
   r.patch('/events/:id', (req, res) => {
@@ -84,17 +86,28 @@ export function eventsRouter({ db, hub }) {
     });
 
     hub.broadcast({ type: 'events-changed', eventId: event.id });
-    res.json(eventDetail(db, event.id, req.user.id));
+    const updated = eventDetail(db, event.id, req.user.id);
+    if (cancelled && !event.cancelled) notifier.eventChanged(updated, 'cancelled', req.user.id);
+    else if (!cancelled && start_at !== event.start_at) notifier.eventChanged(updated, 'moved', req.user.id);
+    res.json(updated);
   });
 
   r.delete('/events/:id', (req, res) => {
     const event = loadEditable(db, id(req.params.id), req.user);
+    const doomed = req.query.scope === 'series' && event.series_id
+      ? db.prepare('SELECT * FROM events WHERE series_id = ? AND start_at >= ?').all(event.series_id, event.start_at)
+      : [event];
+    // Tell people who were signed up – collected before the rows (and their responses) disappear.
+    const toNotify = doomed.filter((e) => !e.cancelled).map((e) => [e, db.prepare(
+      "SELECT user_id FROM event_responses WHERE event_id = ? AND status = 'yes'",
+    ).all(e.id).map((r) => r.user_id)]);
     if (req.query.scope === 'series' && event.series_id) {
       db.prepare('DELETE FROM events WHERE series_id = ? AND start_at >= ?').run(event.series_id, event.start_at);
     } else {
       db.prepare('DELETE FROM events WHERE id = ?').run(event.id);
     }
     hub.broadcast({ type: 'events-changed', eventId: event.id });
+    for (const [e, signedUp] of toNotify) notifier.eventChanged(e, 'deleted', req.user.id, signedUp);
     res.status(204).end();
   });
 
