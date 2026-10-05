@@ -1,0 +1,13 @@
+{
+  "name": "Kajakklubben",
+  "short_name": "Kajak",
+  "description": "Træninger, aftaler og chat for kajakklubben",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4f7fa",
+  "theme_color": "#0e5a8a",
+  "lang": "da",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
