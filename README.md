@@ -44,8 +44,11 @@ Kræver [Node.js](https://nodejs.org) 22.13 eller nyere.
 ```sh
 npm install
 npm run seed     # valgfrit: demo-data (log ind som tina@example.com / kajak1234)
+                 # npm run seed:reset sletter databasen og starter forfra (stop serveren først)
 npm run dev      # server på :3000 og frontend med hot reload på http://localhost:5173
 ```
+
+Demo-dataene indeholder kapholdets uge 40-program (fra `server/seed-data/kaphold.js`) lagt ind i den aktuelle uge, så man kan prøve tilmelding: fællestræningerne på de faste tidspunkter med træner, de øvrige pas i et af dagens vinduer, og en chat-tråd med træningstider og intensiteter. Brugere: `tina@` (admin), `torsten@` og `christen@` (trænere), `mads@`, `olga@`, `freja@`, `jonas@` (medlemmer) – alle `@example.com` med adgangskoden `kajak1234`.
 
 Test: `npm test`
 
