@@ -40,6 +40,17 @@ export default function Members() {
     }
   }
 
+  async function resetPassword(member) {
+    const password = prompt(`Ny adgangskode til ${member.name} (mindst 8 tegn). Giv den til medlemmet, som kan skifte den bagefter.`);
+    if (!password) return;
+    try {
+      await api.put(`/members/${member.id}/password`, { password });
+      alert(`${member.name} har fået en ny adgangskode.`);
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
   async function logout() {
     // This device should stop receiving this member's notifications.
     await disablePush().catch(() => {});
@@ -84,6 +95,9 @@ export default function Members() {
                   {m.phone ? <a href={`tel:${m.phone}`}>{m.phone}</a> : m.email}
                 </span>
               </span>
+              {user.role === 'admin' && m.id !== user.id && (
+                <button className="link small" onClick={() => resetPassword(m)}>Ny kode</button>
+              )}
               {user.role === 'admin' ? (
                 <select value={m.role} onChange={(e) => changeRole(m, e.target.value)} aria-label={`Rolle for ${m.name}`}>
                   {Object.entries(ROLE_LABELS).map(([key, label]) => <option key={key} value={key}>{label}</option>)}

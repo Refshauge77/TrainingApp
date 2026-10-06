@@ -38,8 +38,10 @@ describe('kajakklub API', () => {
   const other = client();
   let trainingId;
 
-  test('first user becomes admin without invite code', async () => {
-    const res = await admin('POST', '/auth/register', { name: 'Træner Tina', email: 'tina@klub.dk', password: 'hemmelig1' });
+  test('first user needs the invite code too, and becomes admin', async () => {
+    const without = await admin('POST', '/auth/register', { name: 'Træner Tina', email: 'tina@klub.dk', password: 'hemmelig1' });
+    assert.equal(without.status, 403);
+    const res = await admin('POST', '/auth/register', { name: 'Træner Tina', email: 'tina@klub.dk', password: 'hemmelig1', inviteCode: 'padle' });
     assert.equal(res.status, 201);
     assert.equal(res.data.role, 'admin');
   });
@@ -171,6 +173,29 @@ describe('kajakklub API', () => {
     assert.equal(listed.title, 'Intervaltræning');
     assert.equal(listed.event_id, trainingId);
     assert.equal((await admin('GET', `/events/${trainingId}`)).data.thread_id, t1.data.id);
+  });
+
+  test('repeated wrong passwords lock the login for a while', async () => {
+    const anon = client();
+    for (let i = 0; i < 5; i++) {
+      assert.equal((await anon('POST', '/auth/login', { email: 'olga@klub.dk', password: 'forkert!!' })).status, 401);
+    }
+    assert.equal((await anon('POST', '/auth/login', { email: 'olga@klub.dk', password: 'hemmelig1' })).status, 429);
+    // other members are unaffected
+    assert.equal((await anon('POST', '/auth/login', { email: 'mads@klub.dk', password: 'hemmelig1' })).status, 200);
+  });
+
+  test('admins can set a new password for a member', async () => {
+    const members = (await admin('GET', '/members')).data;
+    const mads = members.find((m) => m.name === 'Mads');
+    assert.equal((await other('PUT', `/members/${mads.id}/password`, { password: 'nyt-kodeord' })).status, 403);
+    assert.equal((await admin('PUT', `/members/${mads.id}/password`, { password: 'nyt-kodeord' })).status, 204);
+    assert.equal((await member('GET', '/me')).status, 401, 'old sessions are logged out');
+    assert.equal((await member('POST', '/auth/login', { email: 'mads@klub.dk', password: 'nyt-kodeord' })).status, 200);
+  });
+
+  test('health check needs no login', async () => {
+    assert.deepEqual((await client()('GET', '/health')).data, { ok: true });
   });
 
   test('admins manage roles', async () => {

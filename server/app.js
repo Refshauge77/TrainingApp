@@ -20,6 +20,7 @@ export function createApp({ db, inviteCode = '', staticDir = null, devClientUrl 
   app.use(loadUser(db));
 
   const api = express.Router();
+  api.get('/health', (_req, res) => res.json({ ok: true }));
   api.use(usersRouter({ db, inviteCode }));
   api.use(eventsRouter({ db, hub, notifier }));
   api.use(threadsRouter({ db, hub, notifier }));

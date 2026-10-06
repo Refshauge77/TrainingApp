@@ -56,6 +56,8 @@ Test: `npm test`
 
 ## Drift
 
+Trin-for-trin-guide til at sætte appen i drift hos Render med eget domæne: se [DEPLOY.md](DEPLOY.md).
+
 ```sh
 npm install
 npm run build
@@ -66,7 +68,7 @@ Appen er én Node-proces med en SQLite-database (filen `data/kajakklub.db`), så
 
 | Miljøvariabel | Betydning |
 |---|---|
-| `CLUB_INVITE_CODE` | Klubkoden nye medlemmer skal bruge for at oprette sig. Uden den kan alle oprette en bruger. |
+| `CLUB_INVITE_CODE` | Klubkoden alle skal bruge for at oprette sig – også den første bruger, der bliver administrator. Uden den kan alle oprette en bruger. |
 | `PORT` | Port (standard `3000`). |
 | `DATABASE_FILE` | Placering af databasen (standard `data/kajakklub.db`). Tag backup af denne fil. |
 | `CLUB_TIMEZONE` | Tidszone til datoer i notifikationer (standard `Europe/Copenhagen`). |
