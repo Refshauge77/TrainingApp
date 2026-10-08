@@ -11,7 +11,7 @@ self.addEventListener('push', (event) => {
     const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
     // Already looking at exactly this page – no need to buzz.
     if (windows.some((c) => c.focused && c.visibilityState === 'visible' && new URL(c.url).pathname === url)) return;
-    await self.registration.showNotification(data.title ?? 'Kajakklubben', {
+    await self.registration.showNotification(data.title ?? 'Holte Roklub', {
       body: data.body ?? '',
       tag: data.tag,
       renotify: Boolean(data.tag),

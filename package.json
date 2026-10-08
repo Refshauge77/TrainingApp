@@ -1,8 +1,8 @@
 {
-  "name": "kajakklub",
+  "name": "holteroklub",
   "version": "0.1.0",
   "private": true,
-  "description": "Planlægning og kommunikation for kajakklubben: kalender, træningsprogrammer, tilmelding og chat-tråde.",
+  "description": "Planlægning og kommunikation for Holte Roklub: kalender, træningsprogrammer, tilmelding og chat-tråde.",
   "type": "module",
   "engines": {
     "node": ">=22.13"

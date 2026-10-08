@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     env_file: .env
     environment:
-      DATABASE_FILE: /data/kajakklub.db
+      DATABASE_FILE: /data/holteroklub.db
       PORT: "3000"
     volumes:
       - ./data:/data

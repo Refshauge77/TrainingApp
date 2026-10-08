@@ -5,7 +5,7 @@ import { openDb } from './db.js';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const port = Number(process.env.PORT ?? 3000);
-const db = openDb(process.env.DATABASE_FILE ?? `${root}data/kajakklub.db`);
+const db = openDb(process.env.DATABASE_FILE ?? `${root}data/holteroklub.db`);
 
 const app = createApp({
   db,
@@ -18,7 +18,7 @@ const server = app.listen(port, () => {
   if (process.env.KAJAK_DEV_CLIENT_URL) {
     console.log(`API-serveren kører på port ${port}.`);
   } else if (existsSync(`${root}client/dist`)) {
-    console.log(`\n  Kajakklub-appen kører – åbn http://localhost:${port}\n`);
+    console.log(`\n  Holte Roklub-appen kører – åbn http://localhost:${port}\n`);
   } else {
     console.warn('Appen er ikke bygget endnu – kør "npm run build" før "npm start".');
   }

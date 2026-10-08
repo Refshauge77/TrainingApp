@@ -13,11 +13,11 @@ if (!dir || !process.env.DATABASE_FILE) {
 
 mkdirSync(dir, { recursive: true });
 const stamp = new Date().toISOString().slice(0, 16).replace(/[:T]/g, '-');
-const target = join(dir, `kajakklub-${stamp}.db`);
+const target = join(dir, `holteroklub-${stamp}.db`);
 const db = new DatabaseSync(process.env.DATABASE_FILE);
 db.exec(`VACUUM INTO '${target.replaceAll("'", "''")}'`);
 db.close();
 
-const old = readdirSync(dir).filter((f) => /^kajakklub-.*\.db$/.test(f)).sort().slice(0, -keep);
+const old = readdirSync(dir).filter((f) => /^holteroklub-.*\.db$/.test(f)).sort().slice(0, -keep);
 for (const f of old) rmSync(join(dir, f));
 console.log(`Backup gemt: ${target}`);

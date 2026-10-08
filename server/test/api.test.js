@@ -32,7 +32,7 @@ function client() {
 
 const hoursFromNow = (h) => new Date(Date.now() + h * 36e5).toISOString();
 
-describe('kajakklub API', () => {
+describe('Holte Roklub API', () => {
   const admin = client();
   const member = client();
   const other = client();

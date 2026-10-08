@@ -6,7 +6,7 @@ set -euo pipefail
 
 REPO="${REPO:-https://github.com/Refshauge77/TrainingApp.git}"
 BRANCH="${BRANCH:-main}"
-DIR=/opt/kajakklub
+DIR=/opt/holteroklub
 
 if [ "$(id -u)" -ne 0 ]; then echo "Kør scriptet med sudo"; exit 1; fi
 
@@ -34,7 +34,7 @@ cd "$DIR/deploy"
 
 if [ ! -f .env ]; then
   echo "==> Indstillinger (kan ændres senere i $DIR/deploy/.env)"
-  read -rp "Domæne til appen (fx kajak.ditdomæne.dk): " DOMAIN </dev/tty
+  read -rp "Domæne til appen (fx app.ditdomæne.dk): " DOMAIN </dev/tty
   read -rp "Klubkode som medlemmer skal bruge for at oprette sig: " INVITE </dev/tty
   read -rp "Din e-mail (kontakt til push-tjenester): " EMAIL </dev/tty
   cat > .env <<ENV
@@ -53,8 +53,8 @@ echo "==> Bygger og starter appen (første gang tager nogle minutter)"
 docker compose up -d --build
 
 echo "==> Daglig backup kl. 03.30 (de seneste 14 gemmes i $DIR/deploy/backups)"
-cat > /etc/cron.d/kajakklub-backup <<CRON
-30 3 * * * root cd $DIR/deploy && docker compose exec -T app node --disable-warning=ExperimentalWarning server/backup.js /backups 14 >> /var/log/kajakklub-backup.log 2>&1
+cat > /etc/cron.d/holteroklub-backup <<CRON
+30 3 * * * root cd $DIR/deploy && docker compose exec -T app node --disable-warning=ExperimentalWarning server/backup.js /backups 14 >> /var/log/holteroklub-backup.log 2>&1
 CRON
 
 . ./.env

@@ -26,7 +26,7 @@ export default function Login() {
   return (
     <div className="login">
       <img src="/icon.svg" alt="" className="login-logo" />
-      <h1>Kajakklubben</h1>
+      <h1>Holte Roklub</h1>
       <p className="muted">Træninger, aftaler og snak – samlet ét sted.</p>
 
       <form className="card form" onSubmit={submit}>

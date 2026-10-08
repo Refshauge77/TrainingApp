@@ -40,7 +40,7 @@ export function createApp({ db, inviteCode = '', staticDir = null, devClientUrl 
     app.get('/{*path}', (_req, res) => res.sendFile(join(staticDir, 'index.html')));
   } else if (staticDir) {
     app.get('/{*path}', (_req, res) => res.status(503).type('html').send(
-      '<!doctype html><meta charset="utf-8"><title>Kajakklubben</title>'
+      '<!doctype html><meta charset="utf-8"><title>Holte Roklub</title>'
       + '<body style="font-family:system-ui;max-width:36em;margin:3em auto;padding:0 1em">'
       + '<h1>Appen er ikke bygget endnu</h1>'
       + '<p>Kør <code>npm run build</code> og genstart med <code>npm start</code>.</p>'

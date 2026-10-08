@@ -1,6 +1,6 @@
-# Kajakklubben
+# Holte Roklub
 
-En app til planlægning og kommunikation i kajakklubben – som erstatning for de lange WhatsApp-tråde.
+En app til planlægning og kommunikation i Holte Roklub – som erstatning for de lange WhatsApp-tråde.
 
 | Kalender | Træningspas med program | Chat-tråd |
 |---|---|---|
@@ -66,16 +66,16 @@ npm run build
 CLUB_INVITE_CODE=hemmelig-klubkode PORT=3000 npm start
 ```
 
-Appen er én Node-proces med en SQLite-database (filen `data/kajakklub.db`), så den kan køre på en lille server eller en hosting-tjeneste med en vedvarende disk (fx Fly.io, Railway, Render eller en Raspberry Pi i klubhuset). Den skal køre bag HTTPS, da login-cookien kun sendes over en sikker forbindelse i produktion.
+Appen er én Node-proces med en SQLite-database (filen `data/holteroklub.db`), så den kan køre på en lille server eller en hosting-tjeneste med en vedvarende disk (fx Fly.io, Railway, Render eller en Raspberry Pi i klubhuset). Den skal køre bag HTTPS, da login-cookien kun sendes over en sikker forbindelse i produktion.
 
 | Miljøvariabel | Betydning |
 |---|---|
 | `CLUB_INVITE_CODE` | Klubkoden alle skal bruge for at oprette sig – også den første bruger, der bliver administrator. Uden den kan alle oprette en bruger. |
 | `PORT` | Port (standard `3000`). |
-| `DATABASE_FILE` | Placering af databasen (standard `data/kajakklub.db`). Tag backup af denne fil. |
+| `DATABASE_FILE` | Placering af databasen (standard `data/holteroklub.db`). Tag backup af denne fil. |
 | `CLUB_TIMEZONE` | Tidszone til datoer i notifikationer (standard `Europe/Copenhagen`). |
 | `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` | Nøgler til push-notifikationer. Valgfrit: uden dem genereres et sæt automatisk og gemmes i databasen. Lav dem med `npx web-push generate-vapid-keys`. |
-| `VAPID_SUBJECT` | Kontakt-adresse til push-tjenesterne, fx `mailto:formand@kajakklub.dk`. |
+| `VAPID_SUBJECT` | Kontakt-adresse til push-tjenesterne, fx `mailto:formand@holteroklub.dk`. |
 
 ## Teknik
 

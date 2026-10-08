@@ -1,7 +1,7 @@
 {
-  "name": "Kajakklubben",
-  "short_name": "Kajak",
-  "description": "Træninger, aftaler og chat for kajakklubben",
+  "name": "Holte Roklub",
+  "short_name": "Holte Roklub",
+  "description": "Træninger, aftaler og chat for Holte Roklub",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f4f7fa",

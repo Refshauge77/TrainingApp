@@ -2,7 +2,7 @@
 # Create it in Render under New → Blueprint and pick this repository.
 services:
   - type: web
-    name: kajakklub
+    name: holteroklub
     runtime: node
     region: frankfurt
     plan: starter            # a persistent disk requires a paid instance
@@ -16,7 +16,7 @@ services:
       sizeGB: 1
     envVars:
       - key: DATABASE_FILE
-        value: /var/data/kajakklub.db
+        value: /var/data/holteroklub.db
       - key: CLUB_TIMEZONE
         value: Europe/Copenhagen
       # Asked for when the Blueprint is created:

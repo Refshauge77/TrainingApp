@@ -19,13 +19,13 @@ Merge pull requesten på GitHub. Serveren henter koden fra `main`.
 Gå til [portal.azure.com](https://portal.azure.com) → **Create a resource** → **Virtual machine**, og udfyld:
 
 **Basics**
-- **Resource group:** *Create new* → `kajakklub`
-- **Virtual machine name:** `kajakklub`
+- **Resource group:** *Create new* → `holteroklub`
+- **Virtual machine name:** `holteroklub`
 - **Region:** en europæisk region, fx *(Europe) Sweden Central*, *North Europe* eller *West Europe*.
   Vises størrelsen nedenfor ikke, så prøv en anden region.
 - **Image:** *Ubuntu Server 24.04 LTS – x64 Gen2*
 - **Size:** *Standard_B2ats_v2* (markeret "free services eligible")
-- **Authentication type:** *SSH public key*, **Username:** `azureuser`, **Key pair name:** `kajakklub_key`
+- **Authentication type:** *SSH public key*, **Username:** `azureuser`, **Key pair name:** `holteroklub_key`
 - **Public inbound ports:** *Allow selected ports* → vælg **SSH (22)**, **HTTP (80)** og **HTTPS (443)**
 
 **Disks**
@@ -35,7 +35,7 @@ Gå til [portal.azure.com](https://portal.azure.com) → **Create a resource** �
 - **Boot diagnostics:** *Disable* (undgår et ekstra lager-forbrug)
 
 Klik **Review + create** → **Create**, og vælg **Download private key and create resource**.
-Gem filen `kajakklub_key.pem` – den er din nøgle til serveren.
+Gem filen `holteroklub_key.pem` – den er din nøgle til serveren.
 
 Når serveren er oprettet: åbn den og notér **Public IP address** på *Overview*-siden.
 
@@ -44,17 +44,17 @@ Hos den udbyder, hvor domænet er købt (DNS-indstillinger), opret en **A-post**
 
 | Type | Navn / host | Værdi |
 |---|---|---|
-| A | `kajak` | serverens offentlige IP-adresse |
+| A | `app` | serverens offentlige IP-adresse |
 
-Så bliver adressen fx `kajak.ditdomæne.dk`. Vil du bruge selve domænet (`ditdomæne.dk`), skal A-posten have navnet `@`.
+Så bliver adressen fx `app.ditdomæne.dk`. Vil du bruge selve domænet (`ditdomæne.dk`), skal A-posten have navnet `@`.
 Det kan tage fra minutter til et par timer, før ændringen slår igennem.
 
 ## 4. Log ind på serveren
 Åbn **PowerShell** på din pc og gå til mappen med nøglen (typisk Overførsler):
 ```powershell
 cd $HOME\Downloads
-icacls kajakklub_key.pem /inheritance:r /grant:r "$($env:USERNAME):R"
-ssh -i kajakklub_key.pem azureuser@<IP-ADRESSE>
+icacls holteroklub_key.pem /inheritance:r /grant:r "$($env:USERNAME):R"
+ssh -i holteroklub_key.pem azureuser@<IP-ADRESSE>
 ```
 (`icacls`-linjen er kun nødvendig første gang – Windows' ssh nægter at bruge en nøglefil, som andre kan læse.)
 Svar `yes` til spørgsmålet om "authenticity of host".
@@ -65,14 +65,14 @@ Når du er logget ind på serveren, kør:
 curl -fsSL https://raw.githubusercontent.com/Refshauge77/TrainingApp/main/deploy/setup.sh | sudo bash
 ```
 Scriptet spørger om:
-- **Domæne** – fx `kajak.ditdomæne.dk` (det fra trin 3)
+- **Domæne** – fx `app.ditdomæne.dk` (det fra trin 3)
 - **Klubkode** – den kode testpersonerne skal bruge for at oprette sig, fx `padle2026`
 - **E-mail** – kontaktadresse til push-tjenesterne
 
 Første gang tager det nogle minutter. Når DNS peger på serveren, henter Caddy selv et HTTPS-certifikat.
 
 ## 6. Opret dig selv som administrator – før du deler adressen
-Åbn `https://kajak.ditdomæne.dk`, vælg **Opret bruger** og brug klubkoden. Den første bruger bliver administrator.
+Åbn `https://app.ditdomæne.dk`, vælg **Opret bruger** og brug klubkoden. Den første bruger bliver administrator.
 Giv trænerne rollen **Træner** under *Klubben*. Databasen starter tom – der er ingen testdata.
 
 Send derefter adressen og klubkoden til testpersonerne, og bed dem lægge appen på hjemmeskærmen
@@ -86,17 +86,17 @@ Så opdager du det med det samme, hvis noget koster mere end forventet.
 
 | Opgave | Kommando (på serveren) |
 |---|---|
-| Opdatér til nyeste version fra `main` | `sudo /opt/kajakklub/deploy/update.sh` |
-| Se om appen kører | `cd /opt/kajakklub/deploy && sudo docker compose ps` |
-| Se appens log | `cd /opt/kajakklub/deploy && sudo docker compose logs --tail 100 app` |
-| Genstart | `cd /opt/kajakklub/deploy && sudo docker compose restart` |
-| Ændr klubkode m.m. | `sudo nano /opt/kajakklub/deploy/.env` og derefter `sudo docker compose up -d` (i samme mappe) |
+| Opdatér til nyeste version fra `main` | `sudo /opt/holteroklub/deploy/update.sh` |
+| Se om appen kører | `cd /opt/holteroklub/deploy && sudo docker compose ps` |
+| Se appens log | `cd /opt/holteroklub/deploy && sudo docker compose logs --tail 100 app` |
+| Genstart | `cd /opt/holteroklub/deploy && sudo docker compose restart` |
+| Ændr klubkode m.m. | `sudo nano /opt/holteroklub/deploy/.env` og derefter `sudo docker compose up -d` (i samme mappe) |
 
-**Backup:** Hver nat kl. 03.30 gemmes en kopi af databasen i `/opt/kajakklub/deploy/backups` (de seneste 14).
+**Backup:** Hver nat kl. 03.30 gemmes en kopi af databasen i `/opt/holteroklub/deploy/backups` (de seneste 14).
 Der tages også en kopi før hver opdatering. Kopierne ligger på samme server, så hent jævnligt en kopi hjem til din pc:
 ```powershell
-scp -i kajakklub_key.pem "azureuser@<IP-ADRESSE>:/opt/kajakklub/deploy/backups/*" .
+scp -i holteroklub_key.pem "azureuser@<IP-ADRESSE>:/opt/holteroklub/deploy/backups/*" .
 ```
 
-**Lukke POC'en ned:** Slet ressourcegruppen `kajakklub` i Azure-portalen (det sletter server, disk og IP-adresse)
+**Lukke POC'en ned:** Slet ressourcegruppen `holteroklub` i Azure-portalen (det sletter server, disk og IP-adresse)
 og fjern A-posten hos domæneudbyderen.

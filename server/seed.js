@@ -10,7 +10,7 @@ import { INFO, INTENSITIES, WEEK, WINDOWS } from './seed-data/kaphold.js';
 process.env.TZ ??= 'Europe/Copenhagen';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
-const file = process.env.DATABASE_FILE ?? `${root}data/kajakklub.db`;
+const file = process.env.DATABASE_FILE ?? `${root}data/holteroklub.db`;
 if (process.argv.includes('--reset')) {
   for (const f of [file, `${file}-wal`, `${file}-shm`]) if (existsSync(f)) rmSync(f);
 }
