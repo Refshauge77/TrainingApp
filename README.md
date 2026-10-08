@@ -56,7 +56,9 @@ Test: `npm test`
 
 ## Drift
 
-Trin-for-trin-guide til at sætte appen i drift hos Render med eget domæne: se [DEPLOY.md](DEPLOY.md).
+Trin-for-trin-guides til at sætte appen i drift med eget domæne:
+- **Azure** (virtuel maskine med Docker, automatisk HTTPS og daglig backup): [DEPLOY-AZURE.md](DEPLOY-AZURE.md)
+- **Render** (alternativ, ingen server at vedligeholde): [DEPLOY.md](DEPLOY.md)
 
 ```sh
 npm install
