@@ -1,0 +1,26 @@
+# Render Blueprint: one web service with a persistent disk for the SQLite database.
+# Create it in Render under New → Blueprint and pick this repository.
+services:
+  - type: web
+    name: holteroklub
+    runtime: node
+    region: frankfurt
+    plan: starter            # a persistent disk requires a paid instance
+    branch: main
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    disk:
+      name: data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: DATABASE_FILE
+        value: /var/data/holteroklub.db
+      - key: CLUB_TIMEZONE
+        value: Europe/Copenhagen
+      # Asked for when the Blueprint is created:
+      - key: CLUB_INVITE_CODE
+        sync: false
+      - key: VAPID_SUBJECT
+        sync: false

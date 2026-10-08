@@ -1,0 +1,7 @@
+node_modules/
+client/dist/
+data/
+*.db
+*.db-*
+.env
+deploy/backups/

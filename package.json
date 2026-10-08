@@ -1,0 +1,31 @@
+{
+  "name": "holteroklub",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Planlægning og kommunikation for Holte Roklub: kalender, træningsprogrammer, tilmelding og chat-tråde.",
+  "type": "module",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "dev": "node scripts/dev.js",
+    "dev:server": "node --disable-warning=ExperimentalWarning --watch server/index.js",
+    "dev:client": "vite client",
+    "build": "vite build client",
+    "start": "node --disable-warning=ExperimentalWarning server/index.js",
+    "seed": "node --disable-warning=ExperimentalWarning server/seed.js",
+    "seed:reset": "node --disable-warning=ExperimentalWarning server/seed.js --reset",
+    "test": "node --disable-warning=ExperimentalWarning --test 'server/test/*.test.js'"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-router-dom": "^7.18.4",
+    "web-push": "^3.6.7"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.2",
+    "vite": "^8.3.2"
+  }
+}
